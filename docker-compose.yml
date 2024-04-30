@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+    networks:
+      - internal_network
+
+  load-balancer:
+    build:
+      context: ./load-balancer
+    ports:
+      - "80:80"
+    depends_on:
+      - server-ws
+    networks:
+      - internal_network
+
+  server-ws:
+    build:
+      context: ./server-ws
+    deploy:
+      replicas: 3
+    networks:
+      - internal_network
+    depends_on:
+      - redis
+    environment:
+      MQ_BROKER: "redis:6379"
+
+networks:
+  internal_network:
+    driver: bridge
