@@ -1,7 +1,7 @@
 const WebSocket = require('ws')
 
-const { getPubSubClients } = require.main.require('./services/mq')
-const { getIdentity } = require.main.require('./services/identity')
+const { getPubSubClients } = require('../services/mq')
+const { getIdentity } = require('../services/identity')
 
 const boot = async () => {
     const wss = new WebSocket.Server({ port: 8000 })
