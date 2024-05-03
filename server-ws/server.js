@@ -26,7 +26,7 @@ const boot = async () => {
             const { recipient, content } = JSON.parse(message)
             const delivery = { recipient: recipient, sender: userId, content: content }
 
-            console.log(delivery)
+            // console.log(delivery)
 
             pubClient.publish(recipient, JSON.stringify(delivery))
         })
