@@ -18,9 +18,7 @@ const boot = async () => {
 
         const { to, remove, isInit } = addConnection(userId, ws)
 
-        if (isInit) await subClient.subscribe(userId, message => {
-            to(conn => conn.send(message))
-        })
+        if (isInit) await subClient.subscribe(userId, message => to(conn => conn.send(message)))
 
         ws.on('message', message => {
             const { recipient, content } = JSON.parse(message)
@@ -31,9 +29,10 @@ const boot = async () => {
             pubClient.publish(recipient, JSON.stringify(delivery))
         })
 
-        ws.on('close', () => {
-            remove(() => subClient.unsubscribe(userId))
-        })
+        ws.on('close', () => remove(
+            conn => conn.close(),
+            () => subClient.unsubscribe(userId)
+        ))
     })
 
     console.log(`WebSocket server running on port ${process.env.WSS_PORT}`)
